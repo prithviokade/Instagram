@@ -1,9 +1,12 @@
 package com.example.instagramapp;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -17,6 +20,7 @@ import android.widget.Toast;
 
 import com.parse.FindCallback;
 import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
@@ -62,8 +66,12 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(MainActivity.this, "Caption cannot be empty", Toast.LENGTH_SHORT).show();
                     return;
                 }
+                if (photoFile == null || ivPhoto.getDrawable() == null) {
+                    Toast.makeText(MainActivity.this, "Image  cannot be empty", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 ParseUser currentUser = ParseUser.getCurrentUser();
-                savePost(caption, currentUser);
+                savePost(caption, currentUser, photoFile);
             }
         });
     }
@@ -71,8 +79,6 @@ public class MainActivity extends AppCompatActivity {
     // Returns the File for a photo stored on disk given the fileName
     public File getPhotoFileUri(String fileName) {
         // Get safe storage directory for photos
-        // Use `getExternalFilesDir` on Context to access package-specific directories.
-        // This way, we don't need to request external read/write runtime permissions.
         File mediaStorageDir = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), TAG);
 
         // Create the storage directory if it does not exist
@@ -92,8 +98,6 @@ public class MainActivity extends AppCompatActivity {
         photoFile = getPhotoFileUri(photoFileName);
 
         // wrap File object into a content provider
-        // required for API >= 24
-        // See https://guides.codepath.com/android/Sharing-Content-with-Intents#sharing-files-with-api-24-or-higher
         Uri fileProvider = FileProvider.getUriForFile(MainActivity.this, "com.codepath.fileprovider", photoFile);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider);
 
@@ -105,9 +109,26 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void savePost(String caption, ParseUser user) {
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                // by this point we have the camera photo on disk
+                Bitmap takenImage = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
+                // Load the taken image into a preview
+                ImageView ivPreview = (ImageView) findViewById(R.id.ivPhoto);
+                ivPreview.setImageBitmap(takenImage);
+            } else { // Result was a failure
+                Toast.makeText(this, "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private void savePost(String caption, ParseUser user, File photoFile) {
         Post post = new Post();
         post.setCaption(caption);
+        post.setImage(new ParseFile(photoFile));
         post.setUser(user);
         post.saveInBackground(new SaveCallback() {
             @Override
@@ -117,6 +138,7 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     Log.i(TAG, "Success saving new post");
                     etCaption.setText("");
+                    ivPhoto.setImageResource(0);
                 }
             }
         });
