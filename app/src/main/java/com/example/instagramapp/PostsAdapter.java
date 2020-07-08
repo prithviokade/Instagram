@@ -1,11 +1,13 @@
 package com.example.instagramapp;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -14,6 +16,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.parse.ParseFile;
+
+import org.parceler.Parcels;
 
 import java.util.List;
 
@@ -52,6 +56,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
         ImageView ivPost;
         ImageView ivProfile;
         TextView tvCreated;
+        RelativeLayout container;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -60,20 +65,29 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             ivPost = itemView.findViewById(R.id.ivPost);
             ivProfile = itemView.findViewById(R.id.ivProfPic);
             tvCreated = itemView.findViewById(R.id.tvCreatedAt);
+            container = itemView.findViewById(R.id.container);
         }
 
-        public void bind(Post post) {
+        public void bind(final Post post) {
             tvScreenName.setText(post.getUser().getUsername());
             tvCaption.setText(post.getCaption());
             tvCreated.setText(post.getCreatedAt().toString());
             ParseFile profile = post.getUser().getParseFile("Profile");
             if (profile != null) {
-                Log.d("postsadapter","YES THERE IS PROF PIC");
                 Glide.with(context).load(profile.getUrl()).transform(new CircleCrop()).into(ivProfile);
             }
             if (post.getImage() != null) {
                 Glide.with(context).load(post.getImage().getUrl()).into(ivPost);
             }
+
+            container.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(context, DetailsActivity.class);
+                    intent.putExtra("POST", Parcels.wrap(post));
+                    context.startActivity(intent);
+                }
+            });
         }
     }
 
