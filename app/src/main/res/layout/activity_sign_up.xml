@@ -41,10 +41,9 @@
         android:layout_below="@+id/etPassword"
         android:layout_alignParentStart="true"
         android:layout_marginTop="10dp"
-        android:backgroundTint="#C4E5FF"
-        android:enabled="false"
+        android:backgroundTint="#00A6FF"
         android:text="Sign Up"
-        android:textColor="#EBF4FB" />
+        android:textColor="@color/plainWhite" />
 
     <ImageView
         android:id="@+id/imageView"
