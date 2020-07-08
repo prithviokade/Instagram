@@ -2,8 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_margin="10dp"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp">
 
     <TextView
         android:id="@+id/tvScreenName"
@@ -12,8 +13,7 @@
         android:layout_alignParentTop="true"
         android:layout_marginStart="5dp"
         android:layout_marginTop="0dp"
-        android:layout_toEndOf="@+id/ivProfPic"
-        android:text="TextView" />
+        android:layout_toEndOf="@+id/ivProfPic" />
 
     <ImageView
         android:id="@+id/ivProfPic"
@@ -38,6 +38,6 @@
         android:layout_below="@+id/ivPost"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
-        android:text="TextView" />
+        android:textColor="@color/instagramBlue" />
 
 </RelativeLayout>

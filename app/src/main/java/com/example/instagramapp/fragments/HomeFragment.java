@@ -55,10 +55,12 @@ public class HomeFragment extends Fragment {
         queryPosts();
     }
 
-    private void queryPosts() {
+    protected void queryPosts() {
         // Specify which class to query
         ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
         query.include(Post.KEY_USER);
+        query.setLimit(20);
+        query.addDescendingOrder(Post.KEY_CREATED_AT);
         query.findInBackground(new FindCallback<Post>() {
             @Override
             public void done(List<Post> retreivedPosts, ParseException e) {

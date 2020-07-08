@@ -58,8 +58,9 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
         public void bind(Post post) {
             tvScreenName.setText(post.getUser().getUsername());
             tvCaption.setText(post.getCaption());
-            Glide.with(context).load(post.getImage().getUrl()).into(ivPost);
-
+            if (post.getImage() != null) {
+                Glide.with(context).load(post.getImage().getUrl()).into(ivPost);
+            }
         }
     }
 }
