@@ -1,6 +1,7 @@
 package com.example.instagramapp;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
+import com.parse.ParseFile;
 
 import java.util.List;
 
@@ -47,17 +50,27 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
         TextView tvScreenName;
         TextView tvCaption;
         ImageView ivPost;
+        ImageView ivProfile;
+        TextView tvCreated;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             tvScreenName = itemView.findViewById(R.id.tvScreenName);
             tvCaption = itemView.findViewById(R.id.tvCaption);
             ivPost = itemView.findViewById(R.id.ivPost);
+            ivProfile = itemView.findViewById(R.id.ivProfPic);
+            tvCreated = itemView.findViewById(R.id.tvCreatedAt);
         }
 
         public void bind(Post post) {
             tvScreenName.setText(post.getUser().getUsername());
             tvCaption.setText(post.getCaption());
+            tvCreated.setText(post.getCreatedAt().toString());
+            ParseFile profile = post.getUser().getParseFile("Profile");
+            if (profile != null) {
+                Log.d("postsadapter","YES THERE IS PROF PIC");
+                Glide.with(context).load(profile.getUrl()).transform(new CircleCrop()).into(ivProfile);
+            }
             if (post.getImage() != null) {
                 Glide.with(context).load(post.getImage().getUrl()).into(ivPost);
             }

@@ -1,6 +1,7 @@
 package com.example.instagramapp;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -26,6 +27,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         bottomNavigation = findViewById(R.id.bottomNavigation);
+        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        getSupportActionBar().setCustomView(R.layout.actionbar);
+        getSupportActionBar().setTitle("");
 
         bottomNavigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -33,13 +37,16 @@ public class MainActivity extends AppCompatActivity {
                 Fragment fragment;
                 switch (menuItem.getItemId()) {
                     case R.id.actionCreate:
+                        getSupportActionBar().setDisplayShowHomeEnabled(false);
                         fragment =  new CreateFragment();
                         break;
                     case R.id.actionProfile:
+                        getSupportActionBar().setDisplayShowHomeEnabled(false);
                         fragment =  new ProfileFragment();
                         break;
                     case R.id.actionHome:
                     default:
+                        getSupportActionBar().setDisplayShowHomeEnabled(true);
                         fragment =  new HomeFragment();
                         break;
                 }
