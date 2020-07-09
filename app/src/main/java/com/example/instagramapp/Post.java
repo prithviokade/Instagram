@@ -7,6 +7,8 @@ import com.parse.ParseUser;
 
 import org.parceler.Parcel;
 
+import java.util.ArrayList;
+
 @Parcel(analyze={Post.class})
 @ParseClassName("Post")
 public class Post extends ParseObject {
@@ -18,6 +20,8 @@ public class Post extends ParseObject {
     public static final String KEY_IMAGE = "image";
     public static final String KEY_USER = "user";
     public static final String KEY_LIKES = "Likes";
+    public static final String KEY_LIKEDBY = "LikedBy";
+    public static final String KEY_COMMENTS = "Comments";
 
     public String getCaption() {
         return getString(KEY_CAPTION);
@@ -47,5 +51,26 @@ public class Post extends ParseObject {
 
     public void setLikes(int likes) { put(KEY_LIKES, likes); }
 
+    public ArrayList<ParseUser> getLikedBy() {
+        return (ArrayList<ParseUser>) get(KEY_LIKEDBY);
+    }
+
+    public void setLikedBy(ArrayList<ParseUser> users) {
+        put(KEY_LIKEDBY, users);
+    }
+
+    public void addComments(ParseUser user) {
+        add(KEY_LIKEDBY, user);
+    }
+    
+    public ArrayList<Comment> getComments() { return (ArrayList<Comment>) get(KEY_COMMENTS); }
+
+    public void setComments(ArrayList<Comment> comments) {
+        put(KEY_COMMENTS, comments);
+    }
+
+    public void addComments(Comment comment) {
+        add(KEY_COMMENTS, comment);
+    }
 }
 

@@ -16,7 +16,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
+import com.parse.ParseException;
 import com.parse.ParseFile;
+import com.parse.SaveCallback;
 
 import org.parceler.Parcels;
 
@@ -81,6 +83,8 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             ParseFile profile = post.getUser().getParseFile("Profile");
             if (profile != null) {
                 Glide.with(context).load(profile.getUrl()).transform(new CircleCrop()).into(ivProfile);
+            } else {
+                Glide.with(context).load(R.drawable.instagram_user_filled_24).transform(new CircleCrop()).into(ivProfile);
             }
             if (post.getImage() != null) {
                 Glide.with(context).load(post.getImage().getUrl()).into(ivPost);
@@ -101,6 +105,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
                     post.setLikes(post.getLikes() + 1);
                     tvLikes.setText(Integer.toString(post.getLikes()) + " Likes");
                     ivLike.setImageResource(R.drawable.ufi_heart_active);
+                    savePost(post);
                 }
             });
         }
@@ -116,5 +121,18 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
     public void addAll(List<Post> list) {
         posts.addAll(list);
         notifyDataSetChanged();
+    }
+
+    private void savePost(Post post) {
+        post.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e != null) {
+                    Log.e("PostsAdapter", "Error while saving post info", e);
+                } else {
+                    Log.i("PostsAdapter", "Success saving post info");
+                }
+            }
+        });
     }
 }

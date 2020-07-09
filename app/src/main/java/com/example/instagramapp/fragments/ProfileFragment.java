@@ -86,7 +86,11 @@ public class ProfileFragment extends Fragment {
         queryPosts();
 
         ParseFile profile = ParseUser.getCurrentUser().getParseFile("Profile");
-        Glide.with(getContext()).load(profile.getUrl()).placeholder(R.drawable.instagram_user_filled_24).transform(new CircleCrop()).into(ivProfPic);
+        if (profile != null) {
+            Glide.with(getContext()).load(profile.getUrl()).placeholder(R.drawable.instagram_user_filled_24).transform(new CircleCrop()).into(ivProfPic);
+        } else {
+            Glide.with(getContext()).load(R.drawable.instagram_user_filled_24).transform(new CircleCrop()).into(ivProfPic);
+        }
         tvPostsCount.setText(Integer.toString(posts.size()));
 
         btnChangeProf.setOnClickListener(new View.OnClickListener() {

@@ -71,7 +71,11 @@ public class ProfileActivity extends AppCompatActivity {
         queryPosts();
 
         ParseFile profile = post.getUser().getParseFile("Profile");
-        Glide.with(this).load(profile.getUrl()).placeholder(R.drawable.instagram_user_filled_24).transform(new CircleCrop()).into(ivProfPic);
+        if (profile != null){
+            Glide.with(this).load(profile.getUrl()).placeholder(R.drawable.instagram_user_filled_24).transform(new CircleCrop()).into(ivProfPic);
+        } else {
+            Glide.with(this).load(R.drawable.instagram_user_filled_24).transform(new CircleCrop()).into(ivProfPic);
+        }
         tvPostsCount.setText(Integer.toString(posts.size()));
         }
 

@@ -22,6 +22,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.instagramapp.MainActivity;
@@ -49,27 +50,10 @@ public class CreateFragment extends Fragment {
     Button btnCamera;
     Button btnPost;
     ImageView ivPhoto;
+    ProgressBar progressBar;
 
     public CreateFragment() {
         // Required empty public constructor
-    }
-
-    MenuItem miActionProgressItem;
-
-    @Override
-    public void onPrepareOptionsMenu(Menu menu) {
-        // Store instance of the menu item containing progress
-        miActionProgressItem = menu.findItem(R.id.miActionProgress);
-    }
-
-    public void showProgressBar() {
-        // Show progress item
-        miActionProgressItem.setVisible(true);
-    }
-
-    public void hideProgressBar() {
-        // Hide progress item
-        miActionProgressItem.setVisible(false);
     }
 
 
@@ -87,7 +71,9 @@ public class CreateFragment extends Fragment {
         btnCamera = view.findViewById(R.id.btnCamera);
         btnPost = view.findViewById(R.id.btnPost);
         ivPhoto = view.findViewById(R.id.ivPhoto);
+        progressBar = view.findViewById(R.id.progressBar);
 
+        progressBar.setVisibility(ProgressBar.INVISIBLE);
         btnCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -98,19 +84,19 @@ public class CreateFragment extends Fragment {
         btnPost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showProgressBar();
+                progressBar.setVisibility(ProgressBar.VISIBLE);
                 String caption = etCaption.getText().toString();
                 if (caption.isEmpty()) {
                     Toast.makeText(getContext(), "Caption cannot be empty", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 if (photoFile == null || ivPhoto.getDrawable() == null) {
-                    Toast.makeText(getContext(), "Image  cannot be empty", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Image cannot be empty", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 ParseUser currentUser = ParseUser.getCurrentUser();
                 savePost(caption, currentUser, photoFile);
-                hideProgressBar();
+                // progressBar.setVisibility(ProgressBar.INVISIBLE);
             }
         });
     }
@@ -166,6 +152,7 @@ public class CreateFragment extends Fragment {
         Post post = new Post();
         post.setCaption(caption);
         post.setImage(new ParseFile(photoFile));
+        post.setLikes(0);
         post.setUser(user);
         post.saveInBackground(new SaveCallback() {
             @Override
