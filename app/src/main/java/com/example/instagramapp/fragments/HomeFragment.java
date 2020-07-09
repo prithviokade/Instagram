@@ -11,9 +11,12 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.instagramapp.EndlessRecyclerViewScrollListener;
 import com.example.instagramapp.Post;
 import com.example.instagramapp.PostsAdapter;
 import com.example.instagramapp.R;
@@ -32,6 +35,8 @@ public class HomeFragment extends Fragment {
     PostsAdapter adapter;
     List<Post> posts;
     SwipeRefreshLayout swipeContainer;
+    private EndlessRecyclerViewScrollListener scrollListener;
+    int curr;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -50,9 +55,23 @@ public class HomeFragment extends Fragment {
         rvPosts = view.findViewById(R.id.rvPosts);
         posts = new ArrayList<>();
         adapter = new PostsAdapter(getContext(), posts);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
 
         rvPosts.setAdapter(adapter);
-        rvPosts.setLayoutManager(new LinearLayoutManager(getContext()));
+        rvPosts.setLayoutManager(linearLayoutManager);
+
+
+        // Retain an instance so that you can call `resetState()` for fresh searches
+        scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                // Triggered only when new data needs to be appended to the list
+                // Add whatever code is needed to append new items to the bottom of the list
+                queryNextPosts(page);
+            }
+        };
+        // Adds the scroll listener to RecyclerView
+        rvPosts.addOnScrollListener(scrollListener);
 
         // Lookup the swipe container view
         swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
@@ -75,8 +94,33 @@ public class HomeFragment extends Fragment {
         queryPosts();
     }
 
+    private void queryNextPosts(int page) {
+        ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
+        query.include(Post.KEY_USER);
+        query.setLimit(curr + 20);
+        curr += 20;
+        query.addDescendingOrder(Post.KEY_CREATED_AT);
+        query.findInBackground(new FindCallback<Post>() {
+            @Override
+            public void done(List<Post> retreivedPosts, ParseException e) {
+                if (e != null) {
+                    Log.e(TAG, "Error while getting posts");
+                    return;
+                }
+                for (Post post : retreivedPosts) {
+                    Log.i(TAG, "Post: " + post.getCaption() + " User: " + post.getUser().getUsername());
+                }
+                if (retreivedPosts.size() > 20) {
+                    adapter.addAll(retreivedPosts.subList(curr - 21, curr - 1));
+                }
+                swipeContainer.setRefreshing(false);
+            }
+        });
+    }
+
 
     protected void queryPosts() {
+        curr = 20;
         // Specify which class to query
         ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
         query.include(Post.KEY_USER);
@@ -92,6 +136,7 @@ public class HomeFragment extends Fragment {
                 for (Post post : retreivedPosts) {
                     Log.i(TAG, "Post: " + post.getCaption() + " User: " + post.getUser().getUsername());
                 }
+                adapter.clear();
                 adapter.addAll(retreivedPosts);
                 swipeContainer.setRefreshing(false);
             }

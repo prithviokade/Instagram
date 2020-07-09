@@ -15,6 +15,8 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -52,6 +54,25 @@ public class CreateFragment extends Fragment {
         // Required empty public constructor
     }
 
+    MenuItem miActionProgressItem;
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        // Store instance of the menu item containing progress
+        miActionProgressItem = menu.findItem(R.id.miActionProgress);
+    }
+
+    public void showProgressBar() {
+        // Show progress item
+        miActionProgressItem.setVisible(true);
+    }
+
+    public void hideProgressBar() {
+        // Hide progress item
+        miActionProgressItem.setVisible(false);
+    }
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -77,6 +98,7 @@ public class CreateFragment extends Fragment {
         btnPost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                showProgressBar();
                 String caption = etCaption.getText().toString();
                 if (caption.isEmpty()) {
                     Toast.makeText(getContext(), "Caption cannot be empty", Toast.LENGTH_SHORT).show();
@@ -88,6 +110,7 @@ public class CreateFragment extends Fragment {
                 }
                 ParseUser currentUser = ParseUser.getCurrentUser();
                 savePost(caption, currentUser, photoFile);
+                hideProgressBar();
             }
         });
     }

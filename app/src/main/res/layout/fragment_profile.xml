@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/ivProfPic"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        tools:srcCompat="@tools:sample/avatars" />
+
+    <TextView
+        android:id="@+id/tvPostsCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="50dp"
+        android:layout_toStartOf="@+id/tvFollowersCount"
+        android:text="6"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        tools:text="6" />
+
+    <TextView
+        android:id="@+id/tvFollowersCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="53dp"
+        android:layout_toStartOf="@+id/tvFollowingCount"
+        android:text="20"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        tools:text="20" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvPostsCount"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="20dp"
+        android:layout_toStartOf="@+id/textView5"
+        android:text="Posts" />
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvFollowersCount"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="20dp"
+        android:layout_toStartOf="@+id/textView7"
+        android:text="Followers" />
+
+    <TextView
+        android:id="@+id/tvFollowingCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="30dp"
+        android:text="13"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+    <TextView
+        android:id="@+id/textView7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvFollowingCount"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="10dp"
+        android:text="Following" />
+
+    <Button
+        android:id="@+id/btnChangeProf"
+        android:layout_width="100dp"
+        android:layout_height="30dp"
+        android:layout_below="@+id/ivProfPic"
+        android:layout_marginTop="6dp"
+        android:text="Change Profile Photo"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        android:textSize="8sp" />
+
+    <Button
+        android:id="@+id/btnChangeBio"
+        android:layout_width="100dp"
+        android:layout_height="30dp"
+        android:layout_below="@+id/ivProfPic"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="6dp"
+        android:layout_marginEnd="0dp"
+        android:text="Change Bio"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        android:textSize="8sp" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvPosts"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvBio"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginBottom="-34dp" />
+
+    <TextView
+        android:id="@+id/tvBio"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btnChangeProf"
+        android:layout_marginTop="0dp"
+        tools:text="bio" />
+
+</RelativeLayout>
