@@ -57,12 +57,12 @@ public class LoginActivity extends AppCompatActivity {
                 if (!(etUsername.getText().toString().isEmpty()) && !(etPassword.getText().toString().isEmpty())) {
                     // set login button color and enable
                     Log.d(TAG, "detected");
-                    btnLogin.setEnabled(true);
-                    btnLogin.setBackgroundColor(Color.argb(255, 0, 166, 255));
+                    btnLogin.setBackgroundColor(0xFF01A6FF);
                     btnLogin.setTextColor(Color.argb(255, 255, 255, 255));
+                    btnLogin.setEnabled(true);
                 } else {
                     btnLogin.setEnabled(false);
-                    btnLogin.setBackgroundColor(Color.argb(255, 0, 0, 0));
+                    btnLogin.setBackgroundColor(Color.argb(255, 196, 229, 255));
                     btnLogin.setTextColor(Color.argb(255, 235, 244, 251));
                 }
             }
@@ -81,7 +81,7 @@ public class LoginActivity extends AppCompatActivity {
                     // set login button color and enable
                     Log.d(TAG, "detected");
                     btnLogin.setEnabled(true);
-                    btnLogin.setBackgroundColor(Color.argb(255, 0, 166, 255));
+                    btnLogin.setBackgroundColor(0xFF01A6FF);
                     btnLogin.setTextColor(Color.argb(255, 255, 255, 255));
                 } else {
                     btnLogin.setEnabled(false);

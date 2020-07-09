@@ -2,6 +2,7 @@ package com.example.instagramapp;
 
 import android.content.Context;
 import android.content.Intent;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -57,6 +58,8 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
         ImageView ivProfile;
         TextView tvCreated;
         RelativeLayout container;
+        ImageView ivLike;
+        TextView tvLikes;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -66,12 +69,15 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             ivProfile = itemView.findViewById(R.id.ivProfPic);
             tvCreated = itemView.findViewById(R.id.tvCreatedAt);
             container = itemView.findViewById(R.id.container);
+            ivLike = itemView.findViewById(R.id.ivLike);
+            tvLikes = itemView.findViewById(R.id.tvLikes);
         }
 
         public void bind(final Post post) {
             tvScreenName.setText(post.getUser().getUsername());
-            tvCaption.setText(post.getCaption());
+            tvCaption.setText(Html.fromHtml("<b>" + post.getUser().getUsername() + "</b> " + post.getCaption()));
             tvCreated.setText(post.getCreatedAt().toString());
+            tvLikes.setText(Integer.toString(post.getLikes()) + " likes");
             ParseFile profile = post.getUser().getParseFile("Profile");
             if (profile != null) {
                 Glide.with(context).load(profile.getUrl()).transform(new CircleCrop()).into(ivProfile);
@@ -86,6 +92,15 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
                     Intent intent = new Intent(context, DetailsActivity.class);
                     intent.putExtra("POST", Parcels.wrap(post));
                     context.startActivity(intent);
+                }
+            });
+
+            ivLike.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    post.setLikes(post.getLikes() + 1);
+                    tvLikes.setText(Integer.toString(post.getLikes()) + " Likes");
+                    ivLike.setImageResource(R.drawable.ufi_heart_active);
                 }
             });
         }

@@ -5,4 +5,5 @@
     <color name="colorAccent">#03DAC5</color>
     <color name="instagramBlue">#00A6FF</color>
     <color name="plainWhite">#FFFFFF</color>
+    <color name="black">#000000</color>
 </resources>

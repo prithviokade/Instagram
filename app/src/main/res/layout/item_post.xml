@@ -5,7 +5,8 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="10dp">
+    android:background="@color/plainWhite"
+    android:layout_marginBottom="10dp">
 
     <TextView
         android:id="@+id/tvScreenName"
@@ -13,13 +14,16 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_marginStart="5dp"
-        android:layout_marginTop="0dp"
-        android:layout_toEndOf="@+id/ivProfPic" />
+        android:layout_marginTop="15dp"
+        android:layout_toEndOf="@+id/ivProfPic"
+        android:textStyle="bold" />
 
     <ImageView
         android:id="@+id/ivProfPic"
         android:layout_width="30dp"
         android:layout_height="30dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
         tools:srcCompat="@tools:sample/avatars" />
 
     <ImageView
@@ -38,7 +42,9 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/tvLikes"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="10dp" />
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:textColor="#000000" />
 
     <ImageView
         android:id="@+id/ivLike"
@@ -46,6 +52,7 @@
         android:layout_height="32dp"
         android:layout_below="@+id/ivPost"
         android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
         app:srcCompat="@drawable/ufi_heart" />
 
     <ImageView
@@ -74,6 +81,9 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/tvCaption"
         android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginBottom="5dp"
+        android:textSize="10sp"
         tools:text="15 hours ago" />
 
     <ImageView
@@ -83,7 +93,7 @@
         android:layout_below="@+id/ivPost"
         android:layout_alignParentEnd="true"
         android:layout_marginTop="10dp"
-        android:layout_marginEnd="0dp"
+        android:layout_marginEnd="7dp"
         android:background="#FFFFFF"
         android:foregroundTint="#FFFFFF"
         app:srcCompat="@drawable/ufi_save" />
@@ -94,8 +104,9 @@
         android:layout_height="30dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="0dp"
-        android:layout_marginEnd="0dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginRight="10dp"
         app:srcCompat="@drawable/ufi_more" />
 
     <TextView
@@ -103,7 +114,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/ivLike"
+        android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
+        android:textSize="12sp"
+        android:textStyle="bold"
         tools:text="Liked by 20 users" />
 
 </RelativeLayout>
