@@ -47,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
                 Fragment fragment;
                 switch (menuItem.getItemId()) {
                     case R.id.actionCreate:
+
                         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
                         getSupportActionBar().setCustomView(R.layout.actionbar);
                         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#ffffff")));
@@ -75,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case R.id.actionHome:
                     default:
-                        menuItem.setIcon(R.drawable.instagram_home_filled_24);
+                        // menuItem.setIcon(R.drawable.instagram_home_filled_24);
                         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
                         getSupportActionBar().setCustomView(R.layout.actionbar);
                         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#ffffff")));

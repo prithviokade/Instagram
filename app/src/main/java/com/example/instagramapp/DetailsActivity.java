@@ -4,6 +4,8 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -39,6 +41,7 @@ public class DetailsActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setCustomView(R.layout.actionbar);
         getSupportActionBar().setTitle("");
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#ffffff")));
 
         final Post post = (Post) Parcels.unwrap(getIntent().getParcelableExtra("POST"));
 
@@ -46,7 +49,7 @@ public class DetailsActivity extends AppCompatActivity {
         tvScreenName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(DetailsActivity.this, ProfileFragment.class);
+                Intent intent = new Intent(DetailsActivity.this, ProfileActivity.class);
                 intent.putExtra("POST", Parcels.wrap(post));
                 startActivity(intent);
             }
