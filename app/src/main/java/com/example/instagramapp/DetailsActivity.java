@@ -2,6 +2,9 @@ package com.example.instagramapp;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -17,14 +20,18 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.example.instagramapp.fragments.ProfileFragment;
+import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 import org.parceler.Parcels;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DetailsActivity extends AppCompatActivity {
 
@@ -37,12 +44,17 @@ public class DetailsActivity extends AppCompatActivity {
     TextView tvCreated;
     TextView tvLikes;
     ImageView ivLike;
+    RecyclerView rvComments;
+    CommentsAdapter adapter;
+    List<Comment> comments;
+    Post post;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.item_post);
+        setContentView(R.layout.activity_details);
 
+        comments = new ArrayList<>();
         tvScreenName = findViewById(R.id.tvScreenName);
         tvCaption = findViewById(R.id.tvCaption);
         ivPost = findViewById(R.id.ivPost);
@@ -50,13 +62,20 @@ public class DetailsActivity extends AppCompatActivity {
         tvCreated = findViewById(R.id.tvCreatedAt);
         tvLikes = findViewById(R.id.tvLikes);
         ivLike = findViewById(R.id.ivLike);
+        rvComments = findViewById(R.id.rvComments);
+        adapter = new CommentsAdapter(this, comments);
+
+        post = (Post) Parcels.unwrap(getIntent().getParcelableExtra("POST"));
+
+        rvComments.setAdapter(adapter);
+        rvComments.setLayoutManager(new LinearLayoutManager(this));
+        queryComments();
 
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setCustomView(R.layout.actionbar);
         getSupportActionBar().setTitle("");
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#ffffff")));
 
-        final Post post = (Post) Parcels.unwrap(getIntent().getParcelableExtra("POST"));
         final int likes = post.getLikes();
         tvLikes.setText(Integer.toString(likes) + " likes");
         ivLike.setOnClickListener(new View.OnClickListener() {
@@ -89,6 +108,13 @@ public class DetailsActivity extends AppCompatActivity {
             Glide.with(this).load(post.getImage().getUrl()).into(ivPost);
         }
 
+    }
+
+    private void queryComments() {
+        ArrayList<Comment> commentsFromDatabase = post.getComments();
+        comments.clear();
+        comments.addAll(commentsFromDatabase);
+        adapter.notifyDataSetChanged();
     }
 
     private void savePost(Post post) {

@@ -33,5 +33,9 @@ public class Comment extends ParseObject {
         put(KEY_AUTHOR, user);
     }
 
+    public int getLikes() {return getInt("Likes"); }
+
+    public void setLikes(int likes) { put("Likes", likes); }
+
 }
 

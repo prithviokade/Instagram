@@ -62,7 +62,7 @@ public class Post extends ParseObject {
     public void addComments(ParseUser user) {
         add(KEY_LIKEDBY, user);
     }
-    
+
     public ArrayList<Comment> getComments() { return (ArrayList<Comment>) get(KEY_COMMENTS); }
 
     public void setComments(ArrayList<Comment> comments) {
