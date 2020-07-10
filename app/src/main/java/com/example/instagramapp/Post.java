@@ -55,6 +55,9 @@ public class Post extends ParseObject {
         return (ArrayList<ParseUser>) get(KEY_LIKEDBY);
     }
 
+    public void addLikedBy(ParseUser user) {
+        add(KEY_LIKEDBY, user);
+    }
     public void setLikedBy(ArrayList<ParseUser> users) {
         put(KEY_LIKEDBY, users);
     }

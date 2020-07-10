@@ -26,11 +26,13 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
+import com.example.instagramapp.EditProfileActivity;
 import com.example.instagramapp.Post;
 import com.example.instagramapp.PostsAdapter;
 import com.example.instagramapp.ProfilePostsAdapter;
 import com.example.instagramapp.R;
 import com.parse.FindCallback;
+import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseQuery;
@@ -55,13 +57,12 @@ public class ProfileFragment extends Fragment {
 
     RecyclerView rvPosts;
     ProfilePostsAdapter adapter;
-    public static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 112;
-    public String photoFileName = "photo.jpg";
-    File photoFile;
     List<Post> posts;
     ImageView ivProfPic;
-    Button btnChangeProf;
+    Button btnEditProf;
     TextView tvPostsCount;
+    TextView tvBio;
+    TextView tvName;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -75,8 +76,10 @@ public class ProfileFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         rvPosts = view.findViewById(R.id.rvPosts);
         ivProfPic = view.findViewById(R.id.ivProfPic);
-        btnChangeProf = view.findViewById(R.id.btnChangeProf);
+        btnEditProf = view.findViewById(R.id.btnChangeProf);
         tvPostsCount = view.findViewById(R.id.tvPostsCount);
+        tvBio = view.findViewById(R.id.tvBio);
+        tvName = view.findViewById(R.id.tvName);
         posts = new ArrayList<>();
         adapter = new ProfilePostsAdapter(getContext(), posts);
 
@@ -93,65 +96,30 @@ public class ProfileFragment extends Fragment {
         }
         tvPostsCount.setText(Integer.toString(posts.size()));
 
-        btnChangeProf.setOnClickListener(new View.OnClickListener() {
+        btnEditProf.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                launchCamera();
-                savePicture(ParseUser.getCurrentUser(),photoFile);
-                ParseFile profile = ParseUser.getCurrentUser().getParseFile("Profile");
-                Glide.with(getContext()).load(profile.getUrl()).transform(new CircleCrop()).into(ivProfPic);
+                Intent intent = new Intent(getContext(), EditProfileActivity.class);
+                startActivity(intent);
             }
         });
 
-    }
-
-    // Returns the File for a photo stored on disk given the fileName
-    public File getPhotoFileUri(String fileName) {
-        // Get safe storage directory for photos
-        File mediaStorageDir = new File(getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES), TAG);
-
-        // Create the storage directory if it does not exist
-        if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()){
-            Log.d(TAG, "failed to create directory");
+        String name = ParseUser.getCurrentUser().getString("name");
+        if (name != null) {
+            tvName.setText(name);
+        } else {
+            tvName.setText("");
         }
 
-        // Return the file target for the photo based on filename
-        File file = new File(mediaStorageDir.getPath() + File.separator + fileName);
-        return file;
-    }
-
-    private void launchCamera() {
-        // create Intent to take a picture and return control to the calling application
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        // Create a File reference for future access
-        photoFile = getPhotoFileUri(photoFileName);
-
-        // wrap File object into a content provider
-        Uri fileProvider = FileProvider.getUriForFile(getContext(), "com.codepath.fileprovider", photoFile);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider);
-
-        // If you call startActivityForResult() using an intent that no app can handle, your app will crash.
-        // So as long as the result is not null, it's safe to use the intent.
-        if (intent.resolveActivity(getContext().getPackageManager()) != null) {
-            // Start the image capture intent to take photo
-            startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+        String bio = ParseUser.getCurrentUser().getString("bio");
+        if (bio != null) {
+            tvBio.setText(bio);
+        } else {
+            tvBio.setText("");
         }
+
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
-            if (resultCode == RESULT_OK) {
-                // by this point we have the camera photo on disk
-                Bitmap takenImage = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
-                // Load the taken image into a preview
-                ivProfPic.setImageBitmap(takenImage);
-            } else { // Result was a failure
-                Toast.makeText(getContext(), "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
 
     protected void queryPosts() {
         ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
@@ -176,17 +144,4 @@ public class ProfileFragment extends Fragment {
         });
     }
 
-    private void savePicture(ParseUser user, File photoFile) {
-        user.put("Profile", new ParseFile(photoFile));
-        user.saveInBackground(new SaveCallback() {
-            @Override
-            public void done(ParseException e) {
-                if (e != null) {
-                    Log.e(TAG, "Error while saving new post", e);
-                } else {
-                    Log.i(TAG, "Success saving new post");
-                }
-            }
-        });
-    }
 }

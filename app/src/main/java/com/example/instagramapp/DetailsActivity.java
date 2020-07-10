@@ -82,13 +82,20 @@ public class DetailsActivity extends AppCompatActivity implements ReplyFragment.
 
         final int likes = post.getLikes();
         tvLikes.setText(Integer.toString(likes) + " likes");
+        if (userContained(post)) {
+            ivLike.setImageResource(R.drawable.ufi_heart_active);
+        }
+
         ivLike.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                post.setLikes(likes + 1);
-                savePost(post);
-                tvLikes.setText(Integer.toString(post.getLikes()) + " Likes");
-                ivLike.setImageResource(R.drawable.ufi_heart_active);
+                if (!userContained(post)) {
+                    post.setLikes(post.getLikes() + 1);
+                    post.addLikedBy(ParseUser.getCurrentUser());
+                    tvLikes.setText(Integer.toString(post.getLikes()) + " likes");
+                    ivLike.setImageResource(R.drawable.ufi_heart_active);
+                    savePost(post);
+                }
             }
         });
         tvScreenName.setText(post.getUser().getUsername());
@@ -119,6 +126,15 @@ public class DetailsActivity extends AppCompatActivity implements ReplyFragment.
             }
         });
 
+    }
+
+    public boolean userContained(Post post) {
+        for (ParseUser user: post.getLikedBy()) {
+            if (ParseUser.getCurrentUser().getUsername().equals(user.getUsername())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void showReplyDialog() {

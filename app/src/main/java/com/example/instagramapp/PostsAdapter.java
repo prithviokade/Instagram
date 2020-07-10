@@ -18,10 +18,12 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.parse.ParseException;
 import com.parse.ParseFile;
+import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 import org.parceler.Parcels;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> {
@@ -99,16 +101,34 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
                 }
             });
 
+            if (userContained(post)) {
+                ivLike.setImageResource(R.drawable.ufi_heart_active);
+            }
+
+
             ivLike.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    post.setLikes(post.getLikes() + 1);
-                    tvLikes.setText(Integer.toString(post.getLikes()) + " Likes");
-                    ivLike.setImageResource(R.drawable.ufi_heart_active);
-                    savePost(post);
+                    if (!userContained(post)) {
+                        post.setLikes(post.getLikes() + 1);
+                        post.addLikedBy(ParseUser.getCurrentUser());
+                        tvLikes.setText(Integer.toString(post.getLikes()) + " likes");
+                        ivLike.setImageResource(R.drawable.ufi_heart_active);
+                        savePost(post);
+                    }
                 }
             });
         }
+    }
+
+
+    public boolean userContained(Post post) {
+        for (ParseUser user: post.getLikedBy()) {
+            if (ParseUser.getCurrentUser().getUsername().equals(user.getUsername())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     // Clean all elements of the recycler
@@ -135,4 +155,6 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             }
         });
     }
+
 }
+
