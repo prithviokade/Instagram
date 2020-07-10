@@ -2,6 +2,7 @@ package com.example.instagramapp;
 
 import android.content.Context;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,14 +62,15 @@ public class CommentsAdapter extends RecyclerView.Adapter<com.example.instagrama
             tvContent = itemView.findViewById(R.id.tvContent);
             ivProfPic  = itemView.findViewById(R.id.ivProfPic);
             tvLikes  = itemView.findViewById(R.id.tvLikes);
-            ivLike  = itemView.findViewById(R.id.ivLike);
+            ivLike  = itemView.findViewById(R.id.ivHeart);
             tvReply = itemView.findViewById(R.id.tvReply);
         }
 
         public void bind(Comment comment) {
+            Log.d("CommentsAdapter", comment.getContent());
             tvContent.setText(Html.fromHtml("<b>" + comment.getAuthor().getUsername() + "</b> " + comment.getContent()));
 
-            tvLikes.setText(Integer.toString(comment.getLikes()) + "likes");
+            tvLikes.setText(Integer.toString(comment.getLikes()) + " likes");
             ivLike.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

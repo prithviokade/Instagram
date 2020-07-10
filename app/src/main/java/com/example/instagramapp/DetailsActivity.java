@@ -2,6 +2,7 @@ package com.example.instagramapp;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,6 +21,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.example.instagramapp.fragments.ProfileFragment;
+import com.example.instagramapp.fragments.ReplyFragment;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
@@ -33,7 +35,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DetailsActivity extends AppCompatActivity {
+public class DetailsActivity extends AppCompatActivity implements ReplyFragment.ReplyFragmentListener {
 
     public static final String TAG = "DetailsActivity";
 
@@ -46,7 +48,8 @@ public class DetailsActivity extends AppCompatActivity {
     ImageView ivLike;
     RecyclerView rvComments;
     CommentsAdapter adapter;
-    List<Comment> comments;
+    ArrayList<Comment> comments;
+    ImageView ivComment;
     Post post;
 
     @Override
@@ -63,6 +66,7 @@ public class DetailsActivity extends AppCompatActivity {
         tvLikes = findViewById(R.id.tvLikes);
         ivLike = findViewById(R.id.ivLike);
         rvComments = findViewById(R.id.rvComments);
+        ivComment = findViewById(R.id.ivComment);
         adapter = new CommentsAdapter(this, comments);
 
         post = (Post) Parcels.unwrap(getIntent().getParcelableExtra("POST"));
@@ -108,13 +112,51 @@ public class DetailsActivity extends AppCompatActivity {
             Glide.with(this).load(post.getImage().getUrl()).into(ivPost);
         }
 
+        ivComment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showReplyDialog();
+            }
+        });
+
+    }
+
+    private void showReplyDialog() {
+        FragmentManager fm = getSupportFragmentManager();
+        ReplyFragment replyFragment = ReplyFragment.newInstance();
+        replyFragment.show(fm, "fragment_reply");
     }
 
     private void queryComments() {
-        ArrayList<Comment> commentsFromDatabase = post.getComments();
+        ArrayList<Comment> commentsFromDatabase = (ArrayList<Comment>) post.getComments();
         comments.clear();
         comments.addAll(commentsFromDatabase);
         adapter.notifyDataSetChanged();
+    }
+
+    public void onActivityResult(String content) {
+        Comment finComment = new Comment();
+        finComment.setContent(content);
+        finComment.setAuthor(ParseUser.getCurrentUser());
+        finComment.setLikes(0);
+        saveComment(finComment);
+        comments.add(finComment);
+        adapter.notifyItemInserted(comments.size() - 1);
+        post.setComments(comments);
+        savePost(post);
+    }
+
+    private void saveComment(Comment comment) {
+        comment.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e != null) {
+                    Log.e(TAG, "Error while saving comment info", e);
+                } else {
+                    Log.i(TAG, "Success saving comment info");
+                }
+            }
+        });
     }
 
     private void savePost(Post post) {

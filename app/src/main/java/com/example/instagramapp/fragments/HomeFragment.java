@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.instagramapp.Comment;
 import com.example.instagramapp.EndlessRecyclerViewScrollListener;
 import com.example.instagramapp.Post;
 import com.example.instagramapp.PostsAdapter;
@@ -124,6 +125,7 @@ public class HomeFragment extends Fragment {
         // Specify which class to query
         ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
         query.include(Post.KEY_USER);
+        query.include(Post.KEY_COMMENTS + "." + Comment.KEY_AUTHOR);
         query.setLimit(20);
         query.addDescendingOrder(Post.KEY_CREATED_AT);
         query.findInBackground(new FindCallback<Post>() {
