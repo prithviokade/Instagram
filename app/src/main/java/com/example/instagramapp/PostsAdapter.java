@@ -100,6 +100,15 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
                 Glide.with(context).load(post.getImage().getUrl()).into(ivPost);
             }
 
+            ivProfile.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(context, ProfileActivity.class);
+                    intent.putExtra("POST", Parcels.wrap(post));
+                    context.startActivity(intent);
+                }
+            });
+
             container.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

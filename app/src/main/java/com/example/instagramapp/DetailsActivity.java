@@ -119,6 +119,15 @@ public class DetailsActivity extends AppCompatActivity implements ReplyFragment.
             Glide.with(this).load(post.getImage().getUrl()).into(ivPost);
         }
 
+        ivProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(DetailsActivity.this, ProfileActivity.class);
+                intent.putExtra("POST", Parcels.wrap(post));
+                startActivity(intent);
+            }
+        });
+
         ivComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
