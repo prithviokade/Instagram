@@ -63,6 +63,8 @@ public class ProfileFragment extends Fragment {
     TextView tvPostsCount;
     TextView tvBio;
     TextView tvName;
+    TextView tvFollowers;
+    TextView tvFollowing;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -80,6 +82,8 @@ public class ProfileFragment extends Fragment {
         tvPostsCount = view.findViewById(R.id.tvPostsCount);
         tvBio = view.findViewById(R.id.tvBio);
         tvName = view.findViewById(R.id.tvName);
+        tvFollowers = view.findViewById(R.id.tvFollowersCount);
+        tvFollowing = view.findViewById(R.id.tvFollowingCount);
         posts = new ArrayList<>();
         adapter = new ProfilePostsAdapter(getContext(), posts);
 

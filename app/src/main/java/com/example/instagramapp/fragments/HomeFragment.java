@@ -112,7 +112,7 @@ public class HomeFragment extends Fragment {
                     Log.i(TAG, "Post: " + post.getCaption() + " User: " + post.getUser().getUsername());
                 }
                 if (retreivedPosts.size() > 20) {
-                    adapter.addAll(retreivedPosts.subList(curr - 21, curr - 1));
+                    adapter.addAll(retreivedPosts.subList(curr - 20, retreivedPosts.size() - 1));
                 }
                 swipeContainer.setRefreshing(false);
             }
@@ -127,6 +127,7 @@ public class HomeFragment extends Fragment {
         query.include(Post.KEY_USER);
         query.include(Post.KEY_COMMENTS + "." + Comment.KEY_AUTHOR);
         query.include(Post.KEY_LIKEDBY);
+        query.include(Post.KEY_USER + "." + Post.KEY_USER);
         query.setLimit(20);
         query.addDescendingOrder(Post.KEY_CREATED_AT);
         query.findInBackground(new FindCallback<Post>() {

@@ -96,6 +96,13 @@ public class MainActivity extends AppCompatActivity {
         });
         // Set default selection
         bottomNavigation.setSelectedItemId(R.id.actionHome);
+
+        String check = getIntent().getStringExtra("SEND");
+        if (check != null) {
+            Log.d(TAG, check);
+            fragmentManager.beginTransaction().replace(R.id.flContainer, new ProfileFragment()).commit();
+        }
+
     }
 
     private void goLoginActivity() {

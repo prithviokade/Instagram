@@ -20,9 +20,9 @@
         android:layout_marginTop="30dp"
         android:layout_marginEnd="50dp"
         android:layout_toStartOf="@+id/tvFollowersCount"
-        android:text="6"
+        android:text="10"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        tools:text="6" />
+        tools:text="10" />
 
     <TextView
         android:id="@+id/tvFollowersCount"
@@ -41,8 +41,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tvPostsCount"
-        android:layout_marginTop="0dp"
-        android:layout_marginEnd="20dp"
+        android:layout_marginTop="1dp"
+        android:layout_marginEnd="26dp"
         android:layout_toStartOf="@+id/textView5"
         android:text="Posts" />
 
@@ -105,6 +105,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tvName"
+        android:autoLink="all"
+        android:linksClickable="true"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="0dp"
         android:layout_marginRight="10dp"

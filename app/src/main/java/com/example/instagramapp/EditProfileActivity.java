@@ -30,6 +30,8 @@ import com.parse.ParseFile;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
+import org.parceler.Parcels;
+
 import java.io.File;
 
 public class EditProfileActivity extends AppCompatActivity {
@@ -107,6 +109,7 @@ public class EditProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(EditProfileActivity.this, MainActivity.class);
+                intent.putExtra("SEND", "gotoProfile");
                 ParseUser.getCurrentUser().put("name", etName.getText().toString());
                 ParseUser.getCurrentUser().put("bio", etBio.getText().toString());
                 saveUser();

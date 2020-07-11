@@ -79,6 +79,14 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
 
         public void bind(final Post post) {
             tvScreenName.setText(post.getUser().getUsername());
+            tvScreenName.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(context, ProfileActivity.class);
+                    intent.putExtra("POST", Parcels.wrap(post));
+                    context.startActivity(intent);
+                }
+            });
             tvCaption.setText(Html.fromHtml("<b>" + post.getUser().getUsername() + "</b> " + post.getCaption()));
             tvCreated.setText(post.getCreatedAt().toString());
             tvLikes.setText(Integer.toString(post.getLikes()) + " likes");
@@ -126,9 +134,14 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
 
     public boolean userContained(Post post) {
         for (ParseUser user: post.getLikedBy()) {
-            if (ParseUser.getCurrentUser().getUsername().equals(user.getUsername())) {
-                return true;
+            try {
+                if (ParseUser.getCurrentUser().getUsername().equals(user.fetchIfNeeded().getUsername())) {
+                    return true;
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
             }
+
         }
         return false;
     }
