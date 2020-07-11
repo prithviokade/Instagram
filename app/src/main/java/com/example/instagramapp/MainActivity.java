@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.example.instagramapp.fragments.CreateFragment;
 import com.example.instagramapp.fragments.HomeFragment;
 import com.example.instagramapp.fragments.ProfileFragment;
+import com.example.instagramapp.fragments.SearchFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.parse.ParseUser;
 
@@ -73,6 +74,10 @@ public class MainActivity extends AppCompatActivity {
                         });
                         // Log.d(TAG, ParseUser.getCurrentUser().getUsername());
                         fragment = new ProfileFragment();
+                        break;
+                    case R.id.actionSearch:
+                        getSupportActionBar().hide();
+                        fragment = new SearchFragment();
                         break;
                     case R.id.actionHome:
                     default:

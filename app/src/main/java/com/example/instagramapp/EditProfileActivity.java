@@ -1,12 +1,15 @@
 package com.example.instagramapp;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -54,6 +57,8 @@ public class EditProfileActivity extends AppCompatActivity {
         etUsername = findViewById(R.id.etUsername);
         ivProfilePic = findViewById(R.id.ivProfilePic);
         tvDone = findViewById(R.id.tvDone);
+
+        getSupportActionBar().hide();
 
         String fillName = ParseUser.getCurrentUser().getString("name");
         if (fillName != null) {

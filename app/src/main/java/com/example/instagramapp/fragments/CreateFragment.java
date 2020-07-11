@@ -36,6 +36,8 @@ import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
@@ -44,6 +46,7 @@ public class CreateFragment extends Fragment {
 
     public static final String TAG = "CreateFragment";
     public static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 112;
+    public static final int PICK_IMAGE = 1;
     public String photoFileName = "photo.jpg";
     File photoFile;
     EditText etCaption;
@@ -51,6 +54,7 @@ public class CreateFragment extends Fragment {
     Button btnPost;
     ImageView ivPhoto;
     ProgressBar progressBar;
+    Button btnGallery;
 
     public CreateFragment() {
         // Required empty public constructor
@@ -72,12 +76,19 @@ public class CreateFragment extends Fragment {
         btnPost = view.findViewById(R.id.btnPost);
         ivPhoto = view.findViewById(R.id.ivPhoto);
         progressBar = view.findViewById(R.id.progressBar);
+        btnGallery = view.findViewById(R.id.btnGallery);
 
         progressBar.setVisibility(ProgressBar.INVISIBLE);
         btnCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 launchCamera();
+            }
+        });
+        btnGallery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                launchGallery();
             }
         });
 
@@ -96,9 +107,12 @@ public class CreateFragment extends Fragment {
                 }
                 ParseUser currentUser = ParseUser.getCurrentUser();
                 savePost(caption, currentUser, photoFile);
+                Intent intent = new Intent(getContext(), MainActivity.class);
+                startActivity(intent);
                 // progressBar.setVisibility(ProgressBar.INVISIBLE);
             }
         });
+
     }
     // Returns the File for a photo stored on disk given the fileName
     public File getPhotoFileUri(String fileName) {
@@ -113,6 +127,23 @@ public class CreateFragment extends Fragment {
         // Return the file target for the photo based on filename
         File file = new File(mediaStorageDir.getPath() + File.separator + fileName);
         return file;
+    }
+
+    private void launchGallery() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+
+        // Create a File reference for future access
+        photoFile = getPhotoFileUri(photoFileName);
+
+        // wrap File object into a content provider
+        Uri fileProvider = FileProvider.getUriForFile(getContext(), "com.codepath.fileprovider", photoFile);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider);
+
+        if (intent.resolveActivity(getContext().getPackageManager()) != null) {
+            startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE);
+        }
     }
 
     private void launchCamera() {
@@ -144,6 +175,22 @@ public class CreateFragment extends Fragment {
                 ivPhoto.setImageBitmap(takenImage);
             } else { // Result was a failure
                 Toast.makeText(getContext(), "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        if (requestCode == PICK_IMAGE) {
+            if (resultCode == RESULT_OK) {
+                // by this point we have the camera photo on disk
+                try {
+                    InputStream inputStream = getContext().getContentResolver().openInputStream(data.getData());
+                    Bitmap takenImage = BitmapFactory.decodeStream(inputStream);
+                    ivPhoto.setImageBitmap(takenImage);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+                // Load the taken image into a preview
+            } else { // Result was a failure
+                Toast.makeText(getContext(), "Picture wasn't chosen!", Toast.LENGTH_SHORT).show();
             }
         }
     }

@@ -103,6 +103,8 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
 
             if (userContained(post)) {
                 ivLike.setImageResource(R.drawable.ufi_heart_active);
+            } else {
+                ivLike.setImageResource(R.drawable.ufi_heart);
             }
 
 
